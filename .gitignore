@@ -1,0 +1,19 @@
+# generated dirs
+bench/*
+bench-*/*
+build/*
+build-*/*
+bld/*
+bld-*/*
+
+# generated files
+*.html
+
+# osx
+*.DS_Store
+
+# vim
+*.swp
+
+# vscode
+.vscode/*
