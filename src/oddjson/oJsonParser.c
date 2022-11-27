@@ -166,7 +166,7 @@ bool in_json_object_o( oJsonParser p[static 1] )
 {
    if ( p->err != cNoError_ ) return false;
 
-   return false;
+   return not on_char_c( &(p->sca), '}' );
 }
 
 bool finish_parse_json_object_o( oJsonParser p[static 1] )
@@ -203,7 +203,7 @@ bool in_json_array_o( oJsonParser p[static 1] )
 {
    if ( p->err != cNoError_ ) return false;
 
-   return false;
+   return not on_char_c( &(p->sca), ']' );
 }
 
 bool finish_parse_json_array_o( oJsonParser p[static 1] )
