@@ -118,11 +118,11 @@ int main( void )
       }
       else if ( json_name_is_o_( p, "overscan" ) )
       {
-
+         parse_json_bool_o( p, &(it->overscan) );
       }
       else if ( json_name_is_o_( p, "missing" ) )
       {
-
+         parse_json_null_o( p );
       }
       else
       {
@@ -131,9 +131,8 @@ int main( void )
    }
    finish_parse_json_object_o( p );
 
-   release_c( it );
-
    expect_c_( string_is_c( it->name, "Full HD" ) );
 
+   release_c( it );
    return finish_tap_c_();
 }

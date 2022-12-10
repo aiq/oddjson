@@ -110,6 +110,15 @@ bool can_be_json_null_o( oJsonParser p[static 1] )
 
 bool skip_json_member_o( oJsonParser p[static 1] )
 {
+   if ( p->err != cNoError_ ) return false;
+
+   oJsonString jstr;
+   if ( scan_json_string_o( &(p->sca), &jstr ) )
+   {
+      skip_colon( &(p->sca) );
+      return skip_json_value_o( p );
+   }
+
    return false;
 }
 
@@ -119,27 +128,40 @@ bool skip_json_value_o( oJsonParser p[static 1] )
 
    if ( can_be_json_object_o( p ) )
    {
-
+      begin_parse_json_object_o( p );
+      while ( in_json_object_o( p ) )
+      {
+         skip_json_member_o( p );
+      }
+      return finish_parse_json_object_o( p );
    }
    else if ( can_be_json_array_o( p ) )
    {
-
+      begin_parse_json_array_o( p );
+      while ( in_json_array_o( p ) )
+      {
+         skip_json_value_o( p );
+      }
+      return finish_parse_json_array_o( p );
    }
    else if ( can_be_json_string_o( p ) )
    {
-
+      oJsonString jstr;
+      return view_json_string_o( p, &jstr );
    }
    else if ( can_be_json_number_o( p ) )
    {
-
+      double num;
+      return parse_json_number_o( p, &num );
    }
    else if ( can_be_json_bool_o( p ) )
    {
-      
+      bool val;
+      return parse_json_bool_o( p, &val );
    }
    else if ( can_be_json_null_o( p ) )
    {
-
+      return parse_json_null_o( p );
    }
 
    return false;
