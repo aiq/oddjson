@@ -1,6 +1,7 @@
 #include "oddjson/oJsonParser.h"
 
 #include "clingo/io/read_type.h"
+#include "_/error.h"
 
 /*******************************************************************************
 
@@ -41,6 +42,22 @@ bool init_json_parser_o( oJsonParser p[static 1], cChars full )
    p->err = cNoError_;
    skip_ws( &(p->sca) );
    return true;
+}
+
+/*******************************************************************************
+
+*******************************************************************************/
+
+bool push_json_parser_error_o( cErrorStack es[static 1],
+                               oJsonParser const p[static 1] )
+{
+   if ( p->err != NULL )
+   {
+      return push_lit_error_c( es, p->err ) ||
+             push_json_lit_error_o( es, "oJsonParser" );
+   }
+
+   return false;
 }
 
 /*******************************************************************************
@@ -119,6 +136,7 @@ bool skip_json_member_o( oJsonParser p[static 1] )
       return skip_json_value_o( p );
    }
 
+   p->err = "not able to skip member";
    return false;
 }
 
@@ -164,6 +182,7 @@ bool skip_json_value_o( oJsonParser p[static 1] )
       return parse_json_null_o( p );
    }
 
+   p->err = "not able to skip value";
    return false;
 }
 
@@ -181,6 +200,7 @@ bool begin_parse_json_object_o( oJsonParser p[static 1] )
       return true;
    }
 
+   p->err = "not able to begin object";
    return false;
 }
 
@@ -201,6 +221,7 @@ bool finish_parse_json_object_o( oJsonParser p[static 1] )
       return true;
    }
 
+   p->err = "not able to finish object";
    return false;
 }
 
@@ -218,6 +239,7 @@ bool begin_parse_json_array_o( oJsonParser p[static 1] )
       return true;
    }
 
+   p->err = "not able to begin array";
    return false;
 }
 
@@ -238,6 +260,7 @@ bool finish_parse_json_array_o( oJsonParser p[static 1] )
       return true;
    }
 
+   p->err = "not able to finish array";
    return false;
 }
 
@@ -254,6 +277,8 @@ bool view_json_string_o( oJsonParser p[static 1], oJsonString jstr[static 1] )
       skip_comma( &(p->sca) );
       return true;
    }
+
+   p->err = "not able to view string";
    return false;
 }
 
@@ -267,6 +292,7 @@ bool parse_json_number_o( oJsonParser p[static 1], double value[static 1] )
       return true;
    }
 
+   p->err = "not able to parse number";
    return false;
 }
 
@@ -280,6 +306,7 @@ bool parse_json_int_number_o( oJsonParser p[static 1], int64_t value[static 1] )
       return true;
    }
 
+   p->err = "not able to parse int number";
    return false;
 }
 
@@ -293,6 +320,7 @@ bool parse_json_bool_o( oJsonParser p[static 1], bool value[static 1] )
       return true;
    }
 
+   p->err = "not able to parse bool";
    return false;
 }
 
@@ -306,5 +334,6 @@ bool parse_json_null_o( oJsonParser p[static 1] )
       return true;
    }
 
+   p->err = "not able to parse null";
    return false;
 }
