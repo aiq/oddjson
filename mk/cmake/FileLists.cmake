@@ -7,7 +7,6 @@ set( INC_FILES
 
    ${INC_DIR}/oddjson/o_JsonType.h
    ${INC_DIR}/oddjson/OJsonBuilder.h
-   ${INC_DIR}/oddjson/oJsonMember.h
    ${INC_DIR}/oddjson/oJsonParser.h
    ${INC_DIR}/oddjson/oJsonString.h
 )
@@ -19,7 +18,6 @@ set( SRC_FILES
    ${SRC_DIR}/oddjson/error.c
    ${SRC_DIR}/oddjson/o_JsonType.c
    ${SRC_DIR}/oddjson/OJsonBuilder.c
-   ${SRC_DIR}/oddjson/oJsonMember.c
    ${SRC_DIR}/oddjson/oJsonParser.c
    ${SRC_DIR}/oddjson/oJsonString.c
 )

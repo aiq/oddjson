@@ -4,7 +4,6 @@
 #include "clingo/lang/CObject.h"
 #include "oddjson/apidecl.h"
 #include "oddjson/error.h"
-#include "oddjson/oJsonMember.h"
 
 /*******************************************************************************
 ********************************************************* Types and Definitions
