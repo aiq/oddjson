@@ -31,7 +31,7 @@ set( TEST_FILES
    # OJsonBuilder
    ${TEST_DIR}/oddjson/OJsonBuilder/append_json_bool_value.c
    ${TEST_DIR}/oddjson/OJsonBuilder/append_json_bool.c
-   ${TEST_DIR}/oddjson/OJsonBuilder/append_json_number_value.c
+   ${TEST_DIR}/oddjson/OJsonBuilder/append_json_fmt_number_value.c
    ${TEST_DIR}/oddjson/OJsonBuilder/append_json_string_value.c
    ${TEST_DIR}/oddjson/OJsonBuilder/OJsonBuilder-overview.c
    # oJsonParser
