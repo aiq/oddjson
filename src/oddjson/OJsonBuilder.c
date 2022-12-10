@@ -356,6 +356,8 @@ char const* built_json_cstr_o( OJsonBuilder* b )
 bool begin_json_object_o( OJsonBuilder* b, cChars name )
 {
    must_exist_c_( b );
+   if ( json_builder_has_error_o( b ) ) return false;
+
    bool res = append_member_head( b, name ) and
               append_char_c( b->b, '{' ) and
               put_builder_state_o( &(b->pile), o_FirstObjectMember );
@@ -366,6 +368,8 @@ bool begin_json_object_o( OJsonBuilder* b, cChars name )
 bool begin_json_object_value_o( OJsonBuilder* b )
 {
    must_exist_c_( b );
+   if ( json_builder_has_error_o( b ) ) return false;
+
    bool res = append_value_head( b ) and
               append_char_c( b->b, '{' ) and
               put_builder_state_o( &(b->pile), o_FirstObjectMember );
@@ -376,6 +380,7 @@ bool begin_json_object_value_o( OJsonBuilder* b )
 bool finish_json_object_o( OJsonBuilder* b )
 {
    must_exist_c_( b );
+   if ( json_builder_has_error_o( b ) ) return false;
 
    if ( b->pile.s == 0 )
       return set_lit_error( b, "unexpected finish of object" );
@@ -394,6 +399,8 @@ bool finish_json_object_o( OJsonBuilder* b )
 bool begin_json_array_o( OJsonBuilder* b, cChars name )
 {
    must_exist_c_( b );
+   if ( json_builder_has_error_o( b ) ) return false;
+
    bool res = append_member_head( b, name ) and
               append_char_c( b->b, '[' ) and
               put_builder_state_o( &(b->pile), o_FirstArrayValue );
@@ -404,6 +411,8 @@ bool begin_json_array_o( OJsonBuilder* b, cChars name )
 bool begin_json_array_value_o( OJsonBuilder* b )
 {
    must_exist_c_( b );
+   if ( json_builder_has_error_o( b ) ) return false;
+
    bool res = append_value_head( b ) and
               append_char_c( b->b, '[') and
               put_builder_state_o( &(b->pile), o_FirstArrayValue );
@@ -414,6 +423,7 @@ bool begin_json_array_value_o( OJsonBuilder* b )
 bool finish_json_array_o( OJsonBuilder* b )
 {
    must_exist_c_( b );
+   if ( json_builder_has_error_o( b ) ) return false;
 
    if ( b->pile.s == 0 )
       return set_lit_error( b, "unexpected finish of object" );
@@ -434,6 +444,8 @@ bool finish_json_array_o( OJsonBuilder* b )
 bool append_json_bool_o( OJsonBuilder* b, cChars name, bool value )
 {
    must_exist_c_( b );
+   if ( json_builder_has_error_o( b ) ) return false;
+
    bool res = append_member_head( b, name ) and
               append_raw_bool_value( b, value ) and
               append_member_tail( b );
@@ -443,6 +455,8 @@ bool append_json_bool_o( OJsonBuilder* b, cChars name, bool value )
 bool append_json_bool_value_o( OJsonBuilder* b, bool value )
 {
    must_exist_c_( b );
+   if ( json_builder_has_error_o( b ) ) return false;
+
    bool res = append_value_head( b ) and
               append_raw_bool_value( b, value ) and
               append_value_tail( b );
@@ -455,6 +469,8 @@ bool append_json_bool_value_o( OJsonBuilder* b, bool value )
 bool append_json_null_o( OJsonBuilder* b, cChars name )
 {
    must_exist_c_( b );
+   if ( json_builder_has_error_o( b ) ) return false;
+
    bool res = append_member_head( b, name ) and
               append_cstr_c( b->b, "null" ) and
               append_member_tail( b );
@@ -465,6 +481,8 @@ bool append_json_null_o( OJsonBuilder* b, cChars name )
 bool append_json_null_value_o( OJsonBuilder* b )
 {
    must_exist_c_( b );
+   if ( json_builder_has_error_o( b ) ) return false;
+
    bool res = append_value_head( b ) and
               append_cstr_c( b->b, "null" ) and
               append_value_tail( b );
@@ -480,6 +498,8 @@ bool append_json_fmt_number_o( OJsonBuilder* b,
                                char const fmt[static 1] )
 {
    must_exist_c_( b );
+   if ( json_builder_has_error_o( b ) ) return false;
+
    bool res = append_member_head( b, name ) and
               append_raw_fmt_number_value( b, value, fmt ) and
               append_member_tail( b );
@@ -492,6 +512,8 @@ bool append_json_fmt_number_value_o( OJsonBuilder* b,
                                      char const fmt[static 1] )
 {
    must_exist_c_( b );
+   if ( json_builder_has_error_o( b ) ) return false;
+
    bool res = append_value_head( b ) and
               append_raw_fmt_number_value( b, value, fmt ) and
               append_value_tail( b );
@@ -504,6 +526,8 @@ bool append_json_fmt_number_value_o( OJsonBuilder* b,
 bool append_json_number_o( OJsonBuilder* b, cChars name, double value )
 {
    must_exist_c_( b );
+   if ( json_builder_has_error_o( b ) ) return false;
+
    bool res = append_member_head( b, name ) and
               append_raw_fmt_number_value( b, value, "" ) and
               append_member_tail( b );
@@ -514,6 +538,8 @@ bool append_json_number_o( OJsonBuilder* b, cChars name, double value )
 bool append_json_number_value_o( OJsonBuilder* b, double value )
 {
    must_exist_c_( b );
+   if ( json_builder_has_error_o( b ) ) return false;
+
    bool res = append_value_head( b ) and
               append_raw_fmt_number_value( b, value, "" ) and
               append_value_tail( b );
@@ -526,6 +552,8 @@ bool append_json_number_value_o( OJsonBuilder* b, double value )
 bool append_json_string_o( OJsonBuilder* b, cChars name, cChars value )
 {
    must_exist_c_( b );
+   if ( json_builder_has_error_o( b ) ) return false;
+
    bool res = append_member_head( b, name ) and
               append_raw_string_value( b, value ) and
               append_value_tail( b );
@@ -536,6 +564,8 @@ bool append_json_string_o( OJsonBuilder* b, cChars name, cChars value )
 bool append_json_string_value_o( OJsonBuilder* b, cChars value )
 {
    must_exist_c_( b->b );
+   if ( json_builder_has_error_o( b ) ) return false;
+
    bool res = append_value_head( b ) and
               append_raw_string_value( b, value ) and
               append_value_tail( b );
