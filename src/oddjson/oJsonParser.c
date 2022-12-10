@@ -270,6 +270,19 @@ bool parse_json_number_o( oJsonParser p[static 1], double value[static 1] )
    return false;
 }
 
+bool parse_json_int_number_o( oJsonParser p[static 1], int64_t value[static 1] )
+{
+   if ( p->err != cNoError_ ) return false;
+
+   if ( read_int64_c( &(p->sca), value, "" ) )
+   {
+      skip_comma( &(p->sca) );
+      return true;
+   }
+
+   return false;
+}
+
 bool parse_json_bool_o( oJsonParser p[static 1], bool value[static 1] )
 {
    if ( p->err != cNoError_ ) return false;

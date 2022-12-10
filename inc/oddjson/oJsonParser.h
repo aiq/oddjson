@@ -96,6 +96,9 @@ ODDJSON_API bool view_json_string_o( oJsonParser p[static 1],
 ODDJSON_API bool parse_json_number_o( oJsonParser p[static 1],
                                       double value[static 1] );
 
+ODDJSON_API bool parse_json_int_number_o( oJsonParser p[static 1],
+                                          int64_t value[static 1] );
+
 ODDJSON_API bool parse_json_bool_o( oJsonParser p[static 1],
                                     bool value[static 1] );
 
