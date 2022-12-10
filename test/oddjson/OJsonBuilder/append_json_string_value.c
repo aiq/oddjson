@@ -22,10 +22,11 @@ int main( void )
    {
       OJsonBuilder* b = new_json_builder_o();
 
-      append_json_string_value_o( b, c_c( t->inp ) );
-      cChars res = built_json_o( b );
+      expect_c_( append_json_string_value_o( b, c_c( t->inp ) ) );
 
-      expect_c_( chars_is_c( res, t->exp ) );
+      cChars json = built_json_o( b );
+      bool res = chars_is_c( json, t->exp );
+      tap_descf_c( res, "expected '%s', got '%s'", t->exp, json.v );
 
       release_c( b );
    }

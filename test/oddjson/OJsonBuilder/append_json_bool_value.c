@@ -25,7 +25,9 @@ int main( void )
 
       expect_c_( append_json_bool_value_o( b, t->inp ) );
 
-      cChars res = built_json_o( b );
+      cChars json = built_json_o( b );
+      bool res = chars_is_c( json, t->exp );
+      tap_descf_c( res, "expected '%s', got '%s'", t->exp, json.v );
 
       release_c( b );
    }

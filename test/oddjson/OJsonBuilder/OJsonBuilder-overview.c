@@ -44,7 +44,7 @@ int main( void )
    finish_json_object_o( b );
 
 
-   cChars res = built_json_o( b );
+   cChars json = built_json_o( b );
    char const* exp = "> {\n"
                      ">   \"name\":\"Full HD\",\n"
                      ">   \"resolutions\":[\n"
@@ -60,7 +60,8 @@ int main( void )
                      ">   \"overscan\":true,\n"
                      ">   \"missing\":null\n"
                      "> }";
-   expect_c_( chars_is_c( res, exp ) );
+      bool res = chars_is_c( json, exp );
+      tap_descf_c( res, "expected '%s', got '%s'", exp, json.v );
 
    release_c( b );
 
