@@ -17,12 +17,25 @@ static inline char const* get_uxxxx_value( cChars chars,
 
    cScanner* sca = &make_scanner_c_( 4, beg );
    uint16_t val = 0;
-   if ( not read_uint16_c( sca, &val, "x" ) )
+   if ( not read_uint16_c( sca, &val, "x" ) ) return NULL;
+
+   if ( not is_high_utf16_surrogate_c( val ) )
    {
-      return NULL;
+      *r = utf16_rune_c( val );
+      return end-1;
    }
 
-   *r = utf16_rune_c( val );
+   beg = end;
+   end = beg+6;
+   if ( not points_into_c_( chars, end ) ) return NULL;
+
+   sca = &make_scanner_c_( 6, beg );
+   if ( not move_if_chars_c_( sca, "\\u" ) ) return NULL;
+
+   uint16_t low = 0;
+   if ( not read_uint16_c( sca, &low, "x" ) ) return NULL;
+
+   *r = surrogate_rune_c( val, low );
    return end-1;
 }
 

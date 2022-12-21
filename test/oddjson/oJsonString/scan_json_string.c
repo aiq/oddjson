@@ -17,9 +17,14 @@ int main( void )
 
    testSlice tests = slice_c_( test,
       t_(
-         "\"lets check it out \uff6f\": 54",
-         "lets check it out ｯ",
+         "\"lets check it out \\uff6f!\": 54",
+         "lets check it out ｯ!",
          ": 54"
+      ),
+      t_(
+         "\"𝄞 is the right tune for \\ud834\\udd1e!\",",
+         "𝄞 is the right tune for 𝄞!",
+         ","
       )
    );
 
@@ -33,6 +38,10 @@ int main( void )
       expect_c_( json_string_is_o( &jstr, exp ) );
       expect_c_( jstr.byteLength == exp.s );
       expect_c_( jstr.length == count_runes_c( exp ) );
+
+      cVarChars buf = char_buffer_c_( 128 );
+      cChars decoded = decode_json_string_chars_o( &jstr, buf );
+      expect_c_( eq_chars_c( exp, decoded ) );
    }
 
    return finish_tap_c_();
