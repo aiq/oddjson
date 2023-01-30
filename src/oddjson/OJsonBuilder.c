@@ -3,7 +3,7 @@
 #include "clingo/container/pile.h"
 #include "clingo/io/read_type.h"
 #include "clingo/io/write_type.h"
-#include "clingo/string/CStringBuilder.h"
+#include "clingo/string/cStringBuilder.h"
 #include "_/error.h"
 
 /*******************************************************************************
@@ -42,7 +42,7 @@ STATIC_VAL_PILE_IMPL_C_(
 struct OJsonBuilder {
    cChars prefix;
    cChars indent;
-   CStringBuilder* b;
+   cStringBuilder b;
    oBuilderStatePile pile;
    o_JsonBuilderError err;
    char const* lit;
@@ -51,7 +51,7 @@ struct OJsonBuilder {
 static inline void cleanup( void* instance )
 {
    OJsonBuilder* b = instance;
-   release_c( b->b );
+   cleanup_string_builder_c( &(b->b) );
 
    if ( b->pile.v )
    {
@@ -77,7 +77,7 @@ static inline bool with_newline( OJsonBuilder b[static 1] )
 
 static inline bool append_opt_newline( OJsonBuilder b[static 1] )
 {
-   return with_newline( b ) ? append_char_c( b->b, '\n' )
+   return with_newline( b ) ? append_char_c( &b->b, '\n' )
                             : true;
 }
 
@@ -90,17 +90,17 @@ static inline bool append_opt_comma( OJsonBuilder b[static 1] )
    if ( state == o_FirstObjectMember or state == o_FirstArrayValue )
       return append_opt_newline( b );
 
-   return append_char_c( b->b, ',' ) and append_opt_newline( b );
+   return append_char_c( &b->b, ',' ) and append_opt_newline( b );
 }
 
 static bool append_indention( OJsonBuilder b[static 1] )
 {
-   if ( not append_chars_c( b->b, b->prefix ) )
+   if ( not append_chars_c( &b->b, b->prefix ) )
       return false;
 
    times_c_( b->pile.s - 1, n )
    {
-      if ( not append_chars_c( b->b, b->indent ) )
+      if ( not append_chars_c( &b->b, b->indent ) )
          return false;
    }
 
@@ -111,14 +111,14 @@ static inline bool append_escaped_char( OJsonBuilder b[static 1], char c )
 {
    switch ( c )
    {
-      case '\"': return append_cstr_c( b->b, "\\\"" ); // double quotation mark
-      case '\\': return append_cstr_c( b->b, "\\\\" ); // backslash
-      case '\b': return append_cstr_c( b->b, "\\b" );  // backspace
-      case '\f': return append_cstr_c( b->b, "\\f" );  // formfeef
-      case '\n': return append_cstr_c( b->b, "\\n" );  // newline
-      case '\r': return append_cstr_c( b->b, "\\r" );  // carriage return
-      case '\t': return append_cstr_c( b->b, "\\t" );  // horzontal tab
-      default: return append_char_c( b->b, c );
+      case '\"': return append_cstr_c( &b->b, "\\\"" ); // double quotation mark
+      case '\\': return append_cstr_c( &b->b, "\\\\" ); // backslash
+      case '\b': return append_cstr_c( &b->b, "\\b" );  // backspace
+      case '\f': return append_cstr_c( &b->b, "\\f" );  // formfeef
+      case '\n': return append_cstr_c( &b->b, "\\n" );  // newline
+      case '\r': return append_cstr_c( &b->b, "\\r" );  // carriage return
+      case '\t': return append_cstr_c( &b->b, "\\t" );  // horzontal tab
+      default: return append_char_c( &b->b, c );
    }
 }
 
@@ -169,7 +169,7 @@ static inline bool append_raw_bool_value( OJsonBuilder b[static 1],
                                           bool value )
 {
    char const* cstr = value ? "true" : "false";
-   return append_cstr_c( b->b, cstr );
+   return append_cstr_c( &b->b, cstr );
 }
 
 static inline char const* conv_fmt( char const src[static 1],
@@ -213,21 +213,21 @@ static inline bool append_raw_fmt_number_value( OJsonBuilder b[static 1],
 
    cRecorder* rec = &recorder_c_( 256 );
    write_double_c( rec, value, fmt );
-   return append_chars_c( b->b, recorded_chars_c( rec ) );
+   return append_chars_c( &b->b, recorded_chars_c( rec ) );
 }
 
 static inline bool append_raw_string_value( OJsonBuilder b[static 1],  
                                             cChars value )
 {
-   if ( not append_char_c( b->b, '"' ) )
+   if ( not append_char_c( &b->b, '"' ) )
       return set_error( b, o_JsonBuilderMemError );
 
    cRune r;
-   iterate_runes_c_( itr, r, value )
+   iterate_runes_c_( itr, &r, value )
    {
       if ( rune_size_c( r ) > 1 )
       {
-         if ( not append_rune_c( b->b, r ) )
+         if ( not append_rune_c( &b->b, r ) )
             return set_error( b, o_JsonBuilderMemError );
       }
       else
@@ -237,7 +237,7 @@ static inline bool append_raw_string_value( OJsonBuilder b[static 1],
       }  
    }
 
-   if ( not append_char_c( b->b, '"' ) )
+   if ( not append_char_c( &b->b, '"' ) )
       return set_error( b, o_JsonBuilderMemError );
 
    return true;
@@ -250,7 +250,7 @@ static bool append_member_head( OJsonBuilder* b, cChars name )
    return append_opt_comma( b ) and
           append_indention( b ) and
           append_raw_string_value( b, name ) and
-          append_char_c( b->b, ':' );
+          append_char_c( &b->b, ':' );
 }
 
 static bool append_member_tail( OJsonBuilder* b )
@@ -286,8 +286,7 @@ OJsonBuilder* make_json_builder_o( cChars prefix, cChars indent )
       return NULL;
    }
 
-   b->b = new_string_builder_c();
-   if ( b->b == NULL )
+   if ( not init_string_builder_c( &(b->b), 1024 ) )
    {
       release_c( b );
       return NULL;
@@ -340,13 +339,13 @@ bool push_json_builder_error_o( cErrorStack es[static 1], OJsonBuilder* b )
 cChars built_json_o( OJsonBuilder* b )
 {
    must_exist_c_( b );
-   return built_chars_c( b->b );
+   return built_chars_c( &b->b );
 }
 
 char const* built_json_cstr_o( OJsonBuilder* b )
 {
    must_exist_c_( b );
-   return built_cstr_c( b->b );
+   return built_cstr_c( &b->b );
 }
 
 /*******************************************************************************
@@ -359,7 +358,7 @@ bool begin_json_object_o( OJsonBuilder* b, cChars name )
    if ( json_builder_has_error_o( b ) ) return false;
 
    bool res = append_member_head( b, name ) and
-              append_char_c( b->b, '{' ) and
+              append_char_c( &b->b, '{' ) and
               put_builder_state_o( &(b->pile), o_FirstObjectMember );
    return res ? true
               : set_error( b, o_JsonBuilderMemError );
@@ -371,7 +370,7 @@ bool begin_json_object_value_o( OJsonBuilder* b )
    if ( json_builder_has_error_o( b ) ) return false;
 
    bool res = append_value_head( b ) and
-              append_char_c( b->b, '{' ) and
+              append_char_c( &b->b, '{' ) and
               put_builder_state_o( &(b->pile), o_FirstObjectMember );
    return res ? true
               : set_error( b, o_JsonBuilderMemError );
@@ -388,7 +387,7 @@ bool finish_json_object_o( OJsonBuilder* b )
    b->pile.s -= 1;
    bool res = append_opt_newline( b ) and
               append_indention( b ) and
-              append_char_c( b->b, '}' ) and
+              append_char_c( &b->b, '}' ) and
               set_to_nth_state( b );
    return res ? true
               : set_error( b, o_JsonBuilderMemError );
@@ -402,7 +401,7 @@ bool begin_json_array_o( OJsonBuilder* b, cChars name )
    if ( json_builder_has_error_o( b ) ) return false;
 
    bool res = append_member_head( b, name ) and
-              append_char_c( b->b, '[' ) and
+              append_char_c( &b->b, '[' ) and
               put_builder_state_o( &(b->pile), o_FirstArrayValue );
    return res ? true
               : set_error( b, o_JsonBuilderMemError );
@@ -414,7 +413,7 @@ bool begin_json_array_value_o( OJsonBuilder* b )
    if ( json_builder_has_error_o( b ) ) return false;
 
    bool res = append_value_head( b ) and
-              append_char_c( b->b, '[') and
+              append_char_c( &b->b, '[') and
               put_builder_state_o( &(b->pile), o_FirstArrayValue );
    return res ? true
               : set_error( b, o_JsonBuilderMemError );
@@ -431,7 +430,7 @@ bool finish_json_array_o( OJsonBuilder* b )
    b->pile.s -= 1;
    bool res = append_opt_newline( b ) and
               append_indention( b ) and
-              append_char_c( b->b, ']' ) and
+              append_char_c( &b->b, ']' ) and
               set_to_nth_state( b );
    return res ? true
               : set_error( b, o_JsonBuilderMemError );
@@ -472,7 +471,7 @@ bool append_json_null_o( OJsonBuilder* b, cChars name )
    if ( json_builder_has_error_o( b ) ) return false;
 
    bool res = append_member_head( b, name ) and
-              append_cstr_c( b->b, "null" ) and
+              append_cstr_c( &b->b, "null" ) and
               append_member_tail( b );
    return res ? true
               : set_error( b, o_JsonBuilderMemError );
@@ -484,7 +483,7 @@ bool append_json_null_value_o( OJsonBuilder* b )
    if ( json_builder_has_error_o( b ) ) return false;
 
    bool res = append_value_head( b ) and
-              append_cstr_c( b->b, "null" ) and
+              append_cstr_c( &b->b, "null" ) and
               append_value_tail( b );
    return res ? true
               : set_error( b, o_JsonBuilderMemError );
@@ -563,7 +562,7 @@ bool append_json_string_o( OJsonBuilder* b, cChars name, cChars value )
 
 bool append_json_string_value_o( OJsonBuilder* b, cChars value )
 {
-   must_exist_c_( b->b );
+   must_exist_c_( b );
    if ( json_builder_has_error_o( b ) ) return false;
 
    bool res = append_value_head( b ) and

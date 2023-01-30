@@ -39,7 +39,7 @@ int main( void )
       expect_c_( jstr.byteLength == exp.s );
       expect_c_( jstr.length == count_runes_c( exp ) );
 
-      cVarChars buf = char_buffer_c_( 128 );
+      cVarChars buf = var_chars_c_( 128 );
       cChars decoded = decode_json_string_chars_o( &jstr, buf );
       expect_c_( eq_chars_c( exp, decoded ) );
    }
