@@ -1,6 +1,6 @@
 #include "clingo/io/print.h"
 #include "clingo/lang/expect.h"
-#include "oddjson/OJsonBuilder.h"
+#include "oddjson/oJsonBuilder.h"
 
 TEMP_SLICE_C_(
    resolution,
@@ -15,7 +15,8 @@ int main( void )
 {
    init_tap_c_();
 
-   OJsonBuilder* b = make_json_builder_o_( "> ", "  " );
+   oJsonBuilder* b = &json_builder_o_( "> ", "  " );
+   init_json_builder_o( b, 1024 );
 
    resolutionSlice resolutions = slice_c_( resolution,
       r_( 1280, 720 ),
@@ -63,7 +64,7 @@ int main( void )
       bool res = chars_is_c( json, exp );
       tap_descf_c( res, "expected '%s', got '%s'", exp, json.v );
 
-   release_c( b );
+   cleanup_json_builder_o( b );
 
    return finish_tap_c_();
 }

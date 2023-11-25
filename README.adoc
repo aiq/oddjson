@@ -25,5 +25,5 @@ $ ninja -f build-Release.ninja
 $ bld
 $ ctest -C Debug                  # run all debug tests
 $ ctest -C Release                # run all release tests
-$ ctest -C Debug -R ebml          # run debug tests with "ebml" in the name
+$ ctest -C Debug -R json          # run debug tests with "json" in the name
 ----

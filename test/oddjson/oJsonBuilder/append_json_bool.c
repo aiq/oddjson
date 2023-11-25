@@ -1,5 +1,5 @@
 #include "clingo/lang/expect.h"
-#include "oddjson/OJsonBuilder.h"
+#include "oddjson/oJsonBuilder.h"
 
 TEMP_SLICE_C_(
    test,
@@ -24,7 +24,8 @@ int main( void )
 
    for_each_c_( test const*, t, tests )
    {
-      OJsonBuilder* b = make_json_builder_o_( t->prefix, t->indent );
+      oJsonBuilder* b = &json_builder_o_( t->prefix, t->indent );
+      init_json_builder_o( b, 1024 );
 
       expect_c_( begin_json_object_value_o( b ) );
       expect_c_( append_json_bool_o_( b, t->name, t->value ) );
@@ -34,7 +35,8 @@ int main( void )
       bool res = chars_is_c( json, t->exp );
       tap_descf_c( res, "expected '%s', got '%s'", t->exp, json.v );
 
-      release_c( b );
+      cleanup_json_builder_o( b );
+
    }
 
    return finish_tap_c_();
