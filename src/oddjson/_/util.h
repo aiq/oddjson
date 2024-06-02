@@ -53,9 +53,4 @@ static inline bool record_quoted_json_string( cRecorder rec[static 1],
           write_char_c_( rec, '"' );
 }
 
-static inline char const* json_bool_cstr( bool val )
-{
-   return val ? "true" : "false";
-}
-
 #endif
