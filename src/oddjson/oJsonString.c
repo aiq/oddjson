@@ -103,7 +103,7 @@ static inline bool move_sca_back( cScanner sca[static 1], int64_t oldPos )
 cChars decode_json_string_chars_o( oJsonString const jstr[static 1],
                                    cVarChars buf )
 {
-   cRecorder* rec = &make_recorder_c_( buf.s, buf.v );
+   cRecorder* rec = &make_fix_recorder_c_( buf.s, buf.v );
 
    cRune r;
    iterate_json_string_o_( itr, r, jstr )
@@ -134,7 +134,7 @@ CString* decode_json_string_o( oJsonString const jstr[static 1] )
    if ( not iadd64_c( jstr->byteLength, 1, &size ) )
       return NULL;
 
-   cRecorder* rec = &heap_recorder_c_( size );
+   cRecorder* rec = &fix_recorder_c_( size );
    if ( rec->mem == NULL )
       return NULL;
 

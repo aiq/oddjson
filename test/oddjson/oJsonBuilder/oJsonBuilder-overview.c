@@ -25,22 +25,22 @@ int main( void )
 
    begin_json_object_value_o( b );
    {
-      append_json_string_o_( b, "name", c_c( "Full HD" ) );
+      add_json_string_o_( b, "name", c_c( "Full HD" ) );
 
       begin_json_array_o_( b, "resolutions" );
       for_each_c_( resolution const*, res, resolutions )
       {
          begin_json_object_value_o( b );
          {
-            append_json_number_o_( b, "width", res->width );
-            append_json_number_o_( b, "height", res->height );
+            add_json_number_o_( b, "width", res->width );
+            add_json_number_o_( b, "height", res->height );
          }
          finish_json_object_o( b );
       }
       finish_json_array_o( b );
 
-      append_json_bool_o_( b, "overscan", true );
-      append_json_null_o_( b, "missing" );
+      add_json_bool_o_( b, "overscan", true );
+      add_json_null_o_( b, "missing" );
    }
    finish_json_object_o( b );
 

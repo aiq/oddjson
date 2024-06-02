@@ -24,7 +24,7 @@ int main( void )
       oJsonBuilder* b = &json_builder_o_( "", "" );
       init_json_builder_o( b, 1024 );
 
-      expect_c_( append_json_bool_value_o( b, t->inp ) );
+      expect_c_( add_json_bool_value_o( b, t->inp ) );
 
       cChars json = built_json_o( b );
       bool res = chars_is_c( json, t->exp );

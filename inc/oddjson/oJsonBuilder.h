@@ -79,53 +79,53 @@ ODDJSON_API bool finish_json_array_o( oJsonBuilder b[static 1] );
 
 *******************************************************************************/
 
-#define append_json_bool_o_( Builder, Name, Value )                            \
-   append_json_bool_o( (Builder), c_c( Name ), (Value) )
-ODDJSON_API bool append_json_bool_o( oJsonBuilder b[static 1],
-                                     cChars name,
-                                     bool value );
+#define add_json_bool_o_( Builder, Name, Value )                               \
+   add_json_bool_o( (Builder), c_c( Name ), (Value) )
+ODDJSON_API bool add_json_bool_o( oJsonBuilder b[static 1],
+                                  cChars name,
+                                  bool value );
 
-ODDJSON_API bool append_json_bool_value_o( oJsonBuilder b[static 1], bool value );
-
-/**************************************/
-
-#define append_json_null_o_( Builder, Name )                                   \
-   append_json_null_o( (Builder), c_c( Name ) )
-ODDJSON_API bool append_json_null_o( oJsonBuilder b[static 1], cChars name );
-
-ODDJSON_API bool append_json_null_value_o( oJsonBuilder b[static 1] );
+ODDJSON_API bool add_json_bool_value_o( oJsonBuilder b[static 1], bool value );
 
 /**************************************/
 
-#define append_json_fmt_number_o_( Builder, Name, Value, Fmt )                 \
-   append_json_fmt_number_o( (Builder), c_c( Name ), (Value), (Fmt) )
-ODDJSON_API bool append_json_fmt_number_o( oJsonBuilder b[static 1],
-                                           cChars name,
-                                           double value,
-                                           char const fmt[static 1] );
+#define add_json_null_o_( Builder, Name )                                      \
+   add_json_null_o( (Builder), c_c( Name ) )
+ODDJSON_API bool add_json_null_o( oJsonBuilder b[static 1], cChars name );
 
-ODDJSON_API bool append_json_fmt_number_value_o( oJsonBuilder b[static 1],
-                                                 double value,
-                                                 char const fmt[static 1] );
+ODDJSON_API bool add_json_null_value_o( oJsonBuilder b[static 1] );
 
 /**************************************/
 
-#define append_json_number_o_( Builder, Name, Value )                          \
-   append_json_number_o( (Builder), c_c( Name ), (Value) )
+#define add_json_fmt_number_o_( Builder, Name, Value, Fmt )                    \
+   add_json_fmt_number_o( (Builder), c_c( Name ), (Value), (Fmt) )
+ODDJSON_API bool add_json_fmt_number_o( oJsonBuilder b[static 1],
+                                        cChars name,
+                                        double value,
+                                        char const fmt[static 1] );
+
+ODDJSON_API bool add_json_fmt_number_value_o( oJsonBuilder b[static 1],
+                                              double value,
+                                              char const fmt[static 1] );
+
+/**************************************/
+
+#define add_json_number_o_( Builder, Name, Value )                             \
+   add_json_number_o( (Builder), c_c( Name ), (Value) )
 ODDJSON_API
-bool append_json_number_o( oJsonBuilder b[static 1], cChars name, double value );
+bool add_json_number_o( oJsonBuilder b[static 1], cChars name, double value );
 
-ODDJSON_API bool append_json_number_value_o( oJsonBuilder b[static 1],
-                                             double value );
+ODDJSON_API bool add_json_number_value_o( oJsonBuilder b[static 1],
+                                          double value );
 
 /**************************************/
 
-#define append_json_string_o_( Builder, Name, Value )                          \
-   append_json_string_o( (Builder), c_c( Name ), (Value) )
+#define add_json_string_o_( Builder, Name, Value )                             \
+   add_json_string_o( (Builder), c_c( Name ), (Value) )
 ODDJSON_API
-bool append_json_string_o( oJsonBuilder b[static 1], cChars name, cChars value );
+bool add_json_string_o( oJsonBuilder b[static 1], cChars name, cChars value );
 
-ODDJSON_API bool append_json_string_value_o( oJsonBuilder b[static 1],
-                                             cChars value );
+ODDJSON_API bool add_json_string_value_o( oJsonBuilder b[static 1],
+                                          cChars value );
 
 #endif

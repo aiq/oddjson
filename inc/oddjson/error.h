@@ -1,6 +1,7 @@
 #ifndef ODDJSON_ERROR_H
 #define ODDJSON_ERROR_H
 
+#include "clingo/io/cRecorder.h"
 #include "clingo/lang/error.h"
 #include "oddjson/apidecl.h"
 

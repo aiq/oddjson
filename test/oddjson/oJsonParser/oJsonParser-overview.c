@@ -77,8 +77,7 @@ int main( void )
    oJsonParser* p = &(oJsonParser){};
    init_json_parser_o( p, c_c( inp ) );
 
-   begin_parse_json_object_o( p );
-   while ( in_json_object_o( p ) )
+   begin_parse_json_object_o_( p )
    {
       if ( json_name_is_o_( p, "name" ) )
       {
@@ -90,12 +89,10 @@ int main( void )
       }
       else if ( json_name_is_o_( p, "resolutions" ) )
       {
-         begin_parse_json_array_o( p );
-         while ( in_json_array_o( p ) )
+         begin_parse_json_array_o_( p )
          {
             resolution res;
-            begin_parse_json_object_o( p );
-            while ( in_json_object_o( p ) )
+            begin_parse_json_object_o_( p )
             {
                if ( json_name_is_o_( p, "height" ) )
                {

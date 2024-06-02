@@ -25,7 +25,7 @@ int main( void )
       oJsonBuilder* b = &json_builder_o_( "", "" );
       init_json_builder_o( b, 1024 );
 
-      expect_c_( append_json_fmt_number_value_o( b, t->inp, t->fmt ) );
+      expect_c_( add_json_fmt_number_value_o( b, t->inp, t->fmt ) );
       cChars json = built_json_o( b );
       bool res = chars_is_c( json, t->exp );
       tap_descf_c( res, "expected '%s', got '%s'", t->exp, json.v );
