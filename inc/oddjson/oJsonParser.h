@@ -5,6 +5,7 @@
 #include "oddjson/apidecl.h"
 #include "oddjson/error.h"
 #include "oddjson/oJsonString.h"
+#include "oddjson/OJson.h"
 
 /*******************************************************************************
 ********************************************************* Types and Definitions
@@ -47,17 +48,17 @@ ODDJSON_API bool json_name_is_o( oJsonParser p[static 1],
 
 *******************************************************************************/
 
-ODDJSON_API bool can_be_json_object_o( oJsonParser p[static 1] );
+ODDJSON_API bool maybe_json_object_o( oJsonParser p[static 1] );
 
-ODDJSON_API bool can_be_json_array_o( oJsonParser p[static 1] );
+ODDJSON_API bool maybe_json_array_o( oJsonParser p[static 1] );
 
-ODDJSON_API bool can_be_json_string_o( oJsonParser p[static 1] );
+ODDJSON_API bool maybe_json_string_o( oJsonParser p[static 1] );
 
-ODDJSON_API bool can_be_json_number_o( oJsonParser p[static 1] );
+ODDJSON_API bool maybe_json_number_o( oJsonParser p[static 1] );
 
-ODDJSON_API bool can_be_json_bool_o( oJsonParser p[static 1] );
+ODDJSON_API bool maybe_json_bool_o( oJsonParser p[static 1] );
 
-ODDJSON_API bool can_be_json_null_o( oJsonParser p[static 1] );
+ODDJSON_API bool maybe_json_null_o( oJsonParser p[static 1] );
 
 /*******************************************************************************
 
@@ -73,10 +74,10 @@ ODDJSON_API bool skip_json_value_o( oJsonParser p[static 1] );
 
 #define begin_parse_json_object_o_( P )                                        \
    begin_parse_json_object_o( P );                                             \
-   while ( in_json_object_o( P ) )
+   while ( parser_in_json_object_o( P ) )
 ODDJSON_API bool begin_parse_json_object_o( oJsonParser p[static 1] );
 
-ODDJSON_API bool in_json_object_o( oJsonParser p[static 1] );
+ODDJSON_API bool parser_in_json_object_o( oJsonParser p[static 1] );
 
 ODDJSON_API bool finish_parse_json_object_o( oJsonParser p[static 1] );
 
@@ -86,10 +87,10 @@ ODDJSON_API bool finish_parse_json_object_o( oJsonParser p[static 1] );
 
 #define begin_parse_json_array_o_( P )                                         \
    begin_parse_json_array_o( P );                                              \
-   while ( in_json_array_o( P ) )
+   while ( parser_in_json_array_o( P ) )
 ODDJSON_API bool begin_parse_json_array_o( oJsonParser p[static 1] );
 
-ODDJSON_API bool in_json_array_o( oJsonParser p[static 1] );
+ODDJSON_API bool parser_in_json_array_o( oJsonParser p[static 1] );
 
 ODDJSON_API bool finish_parse_json_array_o( oJsonParser p[static 1] );
 
@@ -110,5 +111,14 @@ ODDJSON_API bool parse_json_bool_o( oJsonParser p[static 1],
                                     bool value[static 1] );
 
 ODDJSON_API bool parse_json_null_o( oJsonParser p[static 1] );
+
+ODDJSON_API bool parse_json_object_o( oJsonParser p[static 1],
+                                      OJsonObject* obj );
+
+ODDJSON_API bool parse_json_array_o( oJsonParser p[static 1],
+                                     OJsonArray* arr );
+
+ODDJSON_API bool parse_json_o( oJsonParser p[static 1],
+                               OJson json[static 1] );
 
 #endif
