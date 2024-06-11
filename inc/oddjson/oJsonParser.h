@@ -15,7 +15,8 @@
 
 struct oJsonParser
 {
-   cScanner sca;
+   cScanner ownSca;
+   cScanner* sca;
    char const* err;
 };
 typedef struct oJsonParser oJsonParser;
@@ -27,6 +28,9 @@ typedef struct oJsonParser oJsonParser;
 *******************************************************************************/
 
 ODDJSON_API bool init_json_parser_o( oJsonParser p[static 1], cChars full );
+
+ODDJSON_API bool init_json_parser_shell_o( oJsonParser p[static 1],
+                                           cScanner sca[static 1] );
 
 /*******************************************************************************
 

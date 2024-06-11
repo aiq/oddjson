@@ -19,7 +19,7 @@ int main( void )
 
    testSlice tests = slice_c_( test,
       t_( "", "", "enabled", true, "{\"enabled\":true}" ),
-      t_( "", "  ", "enabled", false, "{\n  \"enabled\":false\n}" )
+      t_( "", "  ", "enabled", false, "{\n  \"enabled\": false\n}" )
    );
 
    for_each_c_( test const*, t, tests )

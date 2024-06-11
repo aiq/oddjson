@@ -4,6 +4,7 @@
 #include "clingo/lang/CObject.h"
 #include "oddjson/apidecl.h"
 #include "oddjson/error.h"
+#include "oddjson/OJson.h"
 
 /*******************************************************************************
 ********************************************************* Types and Definitions
@@ -33,6 +34,9 @@ typedef struct oJsonBuilder oJsonBuilder;
 )
 
 ODDJSON_API bool init_json_builder_o( oJsonBuilder b[static 1], int64_t cap );
+
+ODDJSON_API bool init_json_builder_shell_o( oJsonBuilder b[static 1],
+                                            cRecorder rec[static 1] );
 
 ODDJSON_API void cleanup_json_builder_o( oJsonBuilder b[static 1] );
 
@@ -127,5 +131,38 @@ bool add_json_string_o( oJsonBuilder b[static 1], cChars name, cChars value );
 
 ODDJSON_API bool add_json_string_value_o( oJsonBuilder b[static 1],
                                           cChars value );
+
+/**************************************/
+
+#define add_json_array_o_( Builder, Name, Arr )                                \
+   add_json_array_o( (Builder), c_c( Name ), (Arr) )
+ODDJSON_API bool add_json_array_o( oJsonBuilder b[static 1],
+                                   cChars name,
+                                   OJsonArray const* arr );
+
+ODDJSON_API bool add_json_array_value_o( oJsonBuilder b[static 1],
+                                         OJsonArray const* arr );
+
+/**************************************/
+
+#define add_json_object_o_( Builder, Name, Obj )                               \
+   add_json_object_o( (Builder), c_c( Name ), (Obj) )
+ODDJSON_API bool add_json_object_o( oJsonBuilder b[static 1],
+                                    cChars name,
+                                    OJsonObject const* obj );
+
+ODDJSON_API bool add_json_object_value_o( oJsonBuilder b[static 1],
+                                          OJsonObject const* obj );
+
+/**************************************/
+
+#define add_json_o_( Builder, Name, Value )                                    \
+   add_json_o( (Builder), c_c( Name ), (Value) )
+ODDJSON_API bool add_json_o( oJsonBuilder b[static 1],
+                             cChars name,
+                             OJson const* value );
+
+ODDJSON_API bool add_json_value_o( oJsonBuilder b[static 1],
+                                   OJson const* value );
 
 #endif

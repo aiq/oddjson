@@ -96,11 +96,11 @@ int main( void )
             {
                if ( json_name_is_o_( p, "height" ) )
                {
-                  parse_json_number_o( p, &(res.height) );
+                  parse_json_number_o( p, &res.height );
                }
                else if ( json_name_is_o_( p, "width" ) )
                {
-                  parse_json_number_o( p, &(res.width) );
+                  parse_json_number_o( p, &res.width );
                }
                else
                {
@@ -115,7 +115,7 @@ int main( void )
       }
       else if ( json_name_is_o_( p, "overscan" ) )
       {
-         parse_json_bool_o( p, &(it->overscan) );
+         parse_json_bool_o( p, &it->overscan );
       }
       else if ( json_name_is_o_( p, "missing" ) )
       {

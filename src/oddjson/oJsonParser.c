@@ -38,9 +38,20 @@ static inline void skip_colon( cScanner sca[static 1] )
 
 bool init_json_parser_o( oJsonParser p[static 1], cChars full )
 {
-   p->sca = make_scanner_c_( full.s, full.v );
+   p->ownSca = make_scanner_c_( full.s, full.v );
+   p->sca = &p->ownSca;
    p->err = cNoError_;
-   skip_ws( &(p->sca) );
+   skip_ws( p->sca );
+   return true;
+}
+
+bool init_json_parser_shell_o( oJsonParser p[static 1],
+                               cScanner sca[static 1] )
+{
+   p->ownSca = null_scanner_c_();
+   p->sca = sca;
+   p->err = cNoError_;
+   skip_ws( p->sca );
    return true;
 }
 
@@ -68,9 +79,9 @@ bool json_name_is_o( oJsonParser p[static 1], cChars exp )
 {
    if ( p->err != cNoError_ ) return false;
 
-   bool res = move_if_json_string_is_o( &(p->sca), exp );
-   skip_ws( &(p->sca) );
-   skip_colon( &(p->sca) );
+   bool res = move_if_json_string_is_o( p->sca, exp );
+   skip_ws( p->sca );
+   skip_colon( p->sca );
 
    return res;
 }
@@ -83,42 +94,42 @@ bool maybe_json_object_o( oJsonParser p[static 1] )
 {
    if ( p->err != cNoError_ ) return false;
 
-   return on_char_c( &(p->sca), '{' );
+   return on_char_c( p->sca, '{' );
 }
 
 bool maybe_json_array_o( oJsonParser p[static 1] )
 {
    if ( p->err != cNoError_ ) return false;
 
-   return on_char_c( &(p->sca), '[' );
+   return on_char_c( p->sca, '[' );
 }
 
 bool maybe_json_string_o( oJsonParser p[static 1] )
 {
    if ( p->err != cNoError_ ) return false;
 
-   return on_char_c( &(p->sca), '"' );
+   return on_char_c( p->sca, '"' );
 }
 
 bool maybe_json_number_o( oJsonParser p[static 1] )
 {
    if ( p->err != cNoError_ ) return false;
 
-   return on_any_char_c_( &(p->sca), "-0123456789" );
+   return on_any_char_c_( p->sca, "-0123456789" );
 }
 
 bool maybe_json_bool_o( oJsonParser p[static 1] )
 {
    if ( p->err != cNoError_ ) return false;
 
-   return on_any_char_c_( &(p->sca), "tf" );
+   return on_any_char_c_( p->sca, "tf" );
 }
 
 bool maybe_json_null_o( oJsonParser p[static 1] )
 {
    if ( p->err != cNoError_ ) return false;
 
-   return on_char_c( &(p->sca), 'n' );
+   return on_char_c( p->sca, 'n' );
 }
 
 /*******************************************************************************
@@ -130,9 +141,9 @@ bool skip_json_member_o( oJsonParser p[static 1] )
    if ( p->err != cNoError_ ) return false;
 
    oJsonString jstr;
-   if ( scan_json_string_o( &(p->sca), &jstr ) )
+   if ( scan_json_string_o( p->sca, &jstr ) )
    {
-      skip_colon( &(p->sca) );
+      skip_colon( p->sca );
       return skip_json_value_o( p );
    }
 
@@ -192,9 +203,9 @@ bool begin_parse_json_object_o( oJsonParser p[static 1] )
 {
    if ( p->err != cNoError_ ) return false;
 
-   if ( move_if_char_c( &(p->sca), '{' ) )
+   if ( move_if_char_c( p->sca, '{' ) )
    {
-      skip_ws( &(p->sca) );
+      skip_ws( p->sca );
       return true;
    }
 
@@ -206,16 +217,16 @@ bool parser_in_json_object_o( oJsonParser p[static 1] )
 {
    if ( p->err != cNoError_ ) return false;
 
-   return not on_char_c( &(p->sca), '}' );
+   return not on_char_c( p->sca, '}' );
 }
 
 bool finish_parse_json_object_o( oJsonParser p[static 1] )
 {
    if ( p->err != cNoError_ ) return false;
 
-   if ( move_if_char_c( &(p->sca), '}' ) )
+   if ( move_if_char_c( p->sca, '}' ) )
    {
-      skip_comma( &(p->sca) );
+      skip_comma( p->sca );
       return true;
    }
 
@@ -231,9 +242,9 @@ bool begin_parse_json_array_o( oJsonParser p[static 1] )
 {
    if ( p->err != cNoError_ ) return false;
 
-   if ( move_if_char_c( &(p->sca), '[' ) )
+   if ( move_if_char_c( p->sca, '[' ) )
    {
-      skip_ws( &(p->sca) );
+      skip_ws( p->sca );
       return true;
    }
 
@@ -245,16 +256,16 @@ bool parser_in_json_array_o( oJsonParser p[static 1] )
 {
    if ( p->err != cNoError_ ) return false;
 
-   return not on_char_c( &(p->sca), ']' );
+   return not on_char_c( p->sca, ']' );
 }
 
 bool finish_parse_json_array_o( oJsonParser p[static 1] )
 {
    if ( p->err != cNoError_ ) return false;
 
-   if ( move_if_char_c( &(p->sca), ']' ) )
+   if ( move_if_char_c( p->sca, ']' ) )
    {
-      skip_comma( &(p->sca) );
+      skip_comma( p->sca );
       return true;
    }
 
@@ -270,9 +281,9 @@ bool view_json_string_o( oJsonParser p[static 1], oJsonString jstr[static 1] )
 {
    if ( p->err != cNoError_ ) return false;
 
-   if ( scan_json_string_o( &(p->sca), jstr ) )
+   if ( scan_json_string_o( p->sca, jstr ) )
    {
-      skip_comma( &(p->sca) );
+      skip_comma( p->sca );
       return true;
    }
 
@@ -284,9 +295,9 @@ bool parse_json_number_o( oJsonParser p[static 1], double value[static 1] )
 {
    if ( p->err != cNoError_ ) return false;
 
-   if ( read_double_c( &(p->sca), value, "" ) )
+   if ( read_double_c( p->sca, value, "" ) )
    {
-      skip_comma( &(p->sca) );
+      skip_comma( p->sca );
       return true;
    }
 
@@ -298,9 +309,9 @@ bool parse_json_int_number_o( oJsonParser p[static 1], int64_t value[static 1] )
 {
    if ( p->err != cNoError_ ) return false;
 
-   if ( read_int64_c( &(p->sca), value, "" ) )
+   if ( read_int64_c( p->sca, value, "" ) )
    {
-      skip_comma( &(p->sca) );
+      skip_comma( p->sca );
       return true;
    }
 
@@ -312,9 +323,9 @@ bool parse_json_bool_o( oJsonParser p[static 1], bool value[static 1] )
 {
    if ( p->err != cNoError_ ) return false;
 
-   if ( read_bool_c( &(p->sca), value, "l" ) )
+   if ( read_bool_c( p->sca, value, "l" ) )
    {
-      skip_comma( &(p->sca) );
+      skip_comma( p->sca );
       return true;
    }
 
@@ -326,9 +337,9 @@ bool parse_json_null_o( oJsonParser p[static 1] )
 {
    if ( p->err != cNoError_ ) return false;
 
-   if ( move_if_chars_c_( &(p->sca), "null" ) )
+   if ( move_if_chars_c_( p->sca, "null" ) )
    {
-      skip_comma( &(p->sca) );
+      skip_comma( p->sca );
       return true;
    }
 
@@ -344,7 +355,7 @@ bool parse_json_object_o( oJsonParser p[static 1], OJsonObject* obj )
    begin_parse_json_object_o_( p )
    {
       oJsonString name;
-      if ( not scan_json_string_o( &(p->sca), &name ) )
+      if ( not scan_json_string_o( p->sca, &name ) )
       {
          return false;
       }
@@ -353,7 +364,7 @@ bool parse_json_object_o( oJsonParser p[static 1], OJsonObject* obj )
       {
          return false;
       }
-      skip_colon( &(p->sca) );
+      skip_colon( p->sca );
       OJson* val = new_json_o_();
       if ( val == NULL )
       {
@@ -384,7 +395,12 @@ bool parse_json_array_o( oJsonParser p[static 1], OJsonArray* arr )
       OJson* entry = new_json_o_();
       if ( entry == NULL )
       {
+         release_c( entry );
          // TODO MEM
+         return false;
+      }
+      if ( not parse_json_o( p, entry ) )
+      {
          return false;
       }
       if ( not add_to_json_array_o( arr, entry ) )
@@ -413,7 +429,7 @@ bool parse_json_o( oJsonParser p[static 1], OJson json[static 1] )
          // TODO mem error
          return false;
       }
-      *json = json_with_string_o_( str );
+      set_json_string_o( json, str );
       return true;
    }
    else if ( maybe_json_number_o( p ) ) {
@@ -422,7 +438,8 @@ bool parse_json_o( oJsonParser p[static 1], OJson json[static 1] )
       {
          return false;
       }
-      *json = json_with_number_o_( num );
+      set_json_number_o( json, num );
+      return true;
    }
    else if ( maybe_json_object_o( p ) ) {
       OJsonObject* obj = new_json_object_o();
@@ -435,7 +452,8 @@ bool parse_json_o( oJsonParser p[static 1], OJson json[static 1] )
          release_c( obj );
          return false;
       }
-      *json = json_with_object_o_( obj );
+      set_json_object_o( json, obj );
+      return true;
    }
    else if ( maybe_json_array_o( p ) ) {
       OJsonArray* arr = new_json_array_o();
@@ -449,7 +467,8 @@ bool parse_json_o( oJsonParser p[static 1], OJson json[static 1] )
          release_c( arr );
          return false;
       }
-      *json = json_with_array_o_( arr );
+      set_json_array_o( json, arr );
+      return true;
    }
    else if ( maybe_json_bool_o( p ) ) {
       bool b;
@@ -457,14 +476,16 @@ bool parse_json_o( oJsonParser p[static 1], OJson json[static 1] )
       {
          return false;
       }
-      *json = json_with_bool_o_( b );
+      set_json_bool_o( json, b );
+      return true;
    }
    else if ( maybe_json_null_o( p ) ) {
       if ( not parse_json_null_o( p ) )
       {
          return false;
       }
-      *json = json_with_null_o_();
+      set_json_null_o( json );
+      return true;
    }
 
    p->err = "unknown type";
