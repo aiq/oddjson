@@ -84,12 +84,6 @@ int main( void )
       require_c_( record_json_diff_o( rec, json, oth ) );
       expect_c_( recorded_is_c( rec, t->exp ) );
 
-      if ( not recorded_is_c( rec, t->exp ) )
-      {
-         print_c_( "{rec}", rec );
-         print_c_( "{s}", t->exp );
-      }
-
       release_all_c_( json, oth );
    }
 
