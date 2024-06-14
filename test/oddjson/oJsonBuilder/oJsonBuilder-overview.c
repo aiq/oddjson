@@ -62,7 +62,7 @@ int main( void )
                      ">   \"missing\":null\n"
                      "> }";
       bool res = chars_is_c( json, exp );
-      tap_descf_c( res, "expected '%s', got '%s'", exp, json.v );
+      tap_desc_c_( res, "expected {s:q}, got {s:q}", exp, json.v );
 
    cleanup_json_builder_o( b );
 

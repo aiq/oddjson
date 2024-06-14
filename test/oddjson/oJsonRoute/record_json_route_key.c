@@ -30,7 +30,7 @@ int main( void )
 
       cChars route = recorded_chars_c( rec );
       bool res = eq_chars_c( route, t->exp );
-      tap_descf_c( res, "expected %s / got %s", t->exp.v, route.v );
+      tap_desc_c_( res, "expected {s} / got {s}", t->exp.v, route.v );
 
       free_recorder_mem_c( rec );
    }
