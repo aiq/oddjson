@@ -15,8 +15,9 @@ int main( void )
    init_tap_c_();
 
    testSlice tests = slice_c_( test,
-      t_( cs_c_( "a", "b", "c" ), c_c( "\"a\"b\"c\"" ) ),
-      t_( cs_c_( "a 2", "b.1", "c\"d" ), c_c( "\"a 2\"b.1\"c\\\"d\"" ) )
+      t_( cs_c_( "a", "b", "c" ), c_c( "\"a'b'c\"" ) ),
+      t_( cs_c_( "a 2", "b.1", "c\"d", "e'f" ), c_c( "\"a 2'b.1'c\\\"d'e\\'f\"" ) ),
+      t_( cs_c_( "store", "bookRelease", "0", "author"), c_c( "\"store'bookRelease'0'author\"" ) )
    );
 
    for_each_c_( test const*, t, tests )

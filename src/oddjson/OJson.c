@@ -11,25 +11,7 @@
  
 *******************************************************************************/
 
-OBJ_OBJ_MAP_IMPL_C_(
-   ,                 // Static
-   OJsonObject,      // MapType
-   OJsonObjectRow,   // RowType
-   CString,          // KeyType
-   OJson,            // ValType
-   json_object_o,    // FuncSuffix
-   O_JsonObjectMeta, // Meta
-   hash_string_c,    // HashFunc
-   cmp_string_c      // CmpFunc
-)
 
-OBJ_VEC_IMPL_C_(
-   ,//optional      // Static
-   OJsonArray,      // VecType
-   OJson,           // ObjType
-   json_array_o,    // FuncName
-   O_JsonArrayMeta  // Meta
-)
 
 static inline void cleanup( void* instance )
 {
@@ -64,6 +46,11 @@ extern inline OJson* set_json_null_o( OJson json[static 1] );
 
 /******************************************************************************/
 
+static char const* route_tail( cRecorder const route[static 1] )
+{
+   return route->pos == 0 ? "" : " ";
+}
+
 static bool record_missing_note( cRecorder rec[static 1],
                                  cRecorder const route[static 1],
                                  OJson const* val )
@@ -85,8 +72,8 @@ static bool record_diff_type_note( cRecorder rec[static 1],
                                    o_JsonType exp,
                                    o_JsonType got )
 {
-   char const* space = route->pos == 0 ? "" : " ";
-   return jotln_c_( rec, "~= ", route, space, "different types: ",
+   char const* tail = route_tail( route );
+   return jotln_c_( rec, "~= ", route, tail, "different types: ",
                          "expected ", stringify_json_type_o( exp ),
                          ", got ", stringify_json_type_o( got ) );
 }
@@ -96,7 +83,7 @@ static bool record_diff_string_note( cRecorder rec[static 1],
                                      CString const* exp,
                                      CString const* got )
 {
-   char const* space = route->pos == 0 ? "" : " ";
+   char const* tail = route_tail( route );
    cChars expChars = sc_c( exp );
    cRune expRune;
    char const* expItr = next_rune_c( expChars, NULL, &expRune );
@@ -106,13 +93,13 @@ static bool record_diff_string_note( cRecorder rec[static 1],
 
    if ( is_empty_c_( expChars ) )
    {
-      return jotln_c_( rec, "~= ", route, space, "different strings: ",
+      return jotln_c_( rec, "~= ", route, tail, "different strings: ",
                             "expected an emtpy string" );
    }
 
    if ( is_empty_c_( gotChars ) )
    {
-      return jotln_c_( rec, "~= ", route, space, "different strings: ",
+      return jotln_c_( rec, "~= ", route, tail, "different strings: ",
                             "got an empty string" );
    }
 
@@ -121,7 +108,7 @@ static bool record_diff_string_note( cRecorder rec[static 1],
    {
       if ( not eq_rune_c( expRune, gotRune ) )
       {
-         jotln_c_( rec, "~= ", route, space, "different strings: ",
+         jotln_c_( rec, "~= ", route, tail, "different strings: ",
                         "at rune ", count, " expected ", expRune,
                         ", got ", gotRune );
       }
@@ -131,7 +118,7 @@ static bool record_diff_string_note( cRecorder rec[static 1],
       ++count;
    }
 
-   return jotln_c_( rec, "~= ", route, space, "different strings: ",
+   return jotln_c_( rec, "~= ", route, tail, "different strings: ",
                          "different length: ",
                          "expected ", string_length_c( exp ),
                          ", got ", string_length_c( got ) );
@@ -142,8 +129,8 @@ static bool record_diff_number_note( cRecorder rec[static 1],
                                      double exp,
                                      double got )
 {
-   char const* space = route->pos == 0 ? "" : " ";
-   return jotln_c_( rec, "~= ", route, space, "different numbers: ",
+   char const* tail = route_tail( route );
+   return jotln_c_( rec, "~= ", route, tail, "different numbers: ",
                          "expected ", exp, ", got ", got );
 }
 
@@ -152,8 +139,8 @@ static bool record_diff_boolean_note( cRecorder rec[static 1],
                                       bool exp,
                                       bool got )
 {
-   char const* space = route->pos == 0 ? "" : " ";
-   return jotln_c_( rec, "~= ", route, space, "different booleans: ",
+   char const* tail = route_tail( route );
+   return jotln_c_( rec, "~= ", route, tail, "different booleans: ",
                          "expected ", exp, ", got ", got );
 }
 
@@ -350,22 +337,6 @@ bool record_json_array_diff_o( cRecorder rec[static 1],
    free_recorder_mem_c( route );
    return res;
 }
-
-/*******************************************************************************
-
-*******************************************************************************/
-
-extern inline bool via_chars_in_json_object_o( OJsonObject* obj, cChars key );
-
-extern inline OJson* get_via_chars_from_json_object_o( OJsonObject* obj,
-                                                       cChars key );
-
-extern inline bool remove_via_chars_from_json_object_o( OJsonObject* obj,
-                                                        cChars key );
-
-extern inline bool set_via_chars_on_json_object_o( OJsonObject* obj,
-                                                   cChars key,
-                                                   OJson* val );
 
 /*******************************************************************************
 

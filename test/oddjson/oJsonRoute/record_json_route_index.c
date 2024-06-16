@@ -20,10 +20,10 @@ int main( void )
    {
       require_c_( record_json_route_key_o( rec, *key ) );
    }
-   expect_( rec, "\"0\"a 2\"b.1\"c\\\"d\"" );
+   expect_( rec, "\"0'a 2'b.1'c\\\"d\"" );
 
    require_c_( record_json_route_index_o( rec, 23 ) );
-   expect_( rec, "\"0\"a 2\"b.1\"c\\\"d\"23\"" );
+   expect_( rec, "\"0'a 2'b.1'c\\\"d'23\"" );
 
    return finish_tap_c_();
 }

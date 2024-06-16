@@ -46,43 +46,45 @@ int main( void )
       t_(
          "{\"a\":{\"b\":[1,2,3]}}",
          "{\"a\":{\"b\":[]}}",
-         "~= \"a\"b\" different number of elements: expected 3, got 0\n"
+         "~= \"a'b\" different number of elements: expected 3, got 0\n"
       ),
       t_(
          "{\"a\":{\"b\":{\"c\":[1,2,3]}}}",
          "{\"a\":{\"b\":{\"c\":[1,3]}}}",
-         "~= \"a\"b\"c\" different number of elements: expected 3, got 2\n"
+         "~= \"a'b'c\" different number of elements: expected 3, got 2\n"
       ),
       t_(
          "{\"a\":{\"b\":{\"c\":[1,2,3]}}}",
          "{\"a\":{\"b\":{\"c\":[1,6,2]}}}",
-         "~= \"a\"b\"c\"1\" different numbers: expected 2, got 6\n"
-         "~= \"a\"b\"c\"2\" different numbers: expected 3, got 2\n"
+         "~= \"a'b'c'1\" different numbers: expected 2, got 6\n"
+         "~= \"a'b'c'2\" different numbers: expected 3, got 2\n"
       ),
       t_(
          "{\"a\":{\"b\":{\"x\":[]}}}",
          "{\"a\":{\"b\":{\"z\":{}}}}",
-         "-- \"a\"b\"x\" missing o_JsonArray\n"
-         "++ \"a\"b\"z\" unexpected o_JsonObject\n"
+         "-- \"a'b'x\" missing o_JsonArray\n"
+         "++ \"a'b'z\" unexpected o_JsonObject\n"
       )
    );
 
-   for_each_c_( test const*, t, tests )
+   times_c_( tests.s, i )
    {
+      test t = tests.v[i];
+
       cScanner* sca;
       cErrorStack* es = &error_stack_c_( 1024 );
 
       OJson* json = let_json_o_();
-      sca = &cstr_scanner_c_( t->json );
+      sca = &cstr_scanner_c_( t.json );
       unmarshal_json_o( sca, json, es );
 
       OJson* oth = let_json_o_();
-      sca = &cstr_scanner_c_( t->oth );
+      sca = &cstr_scanner_c_( t.oth );
       unmarshal_json_o( sca, oth, es );
 
       cRecorder* rec = &recorder_c_( 2048 );
       require_c_( record_json_diff_o( rec, json, oth ) );
-      expect_c_( recorded_is_c( rec, t->exp ) );
+      tap_desc_c_( recorded_is_c( rec, t.exp ), "@ {i64}", i );
 
       release_all_c_( json, oth );
    }
