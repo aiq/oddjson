@@ -17,8 +17,7 @@ ODDJSON_API bool record_json_route_key_o( cRecorder rec[static 1],
 ODDJSON_API bool record_json_route_index_o( cRecorder rec[static 1],
                                             int64_t index );
 
-/*******************************************************************************
-
-*******************************************************************************/
+ODDJSON_API bool record_json_route_o( cRecorder rec[static 1],
+                                      cCharsSlice route );
 
 #endif

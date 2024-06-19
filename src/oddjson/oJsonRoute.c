@@ -13,15 +13,9 @@ static inline bool record_escaped_route_char( cRecorder rec[static 1], char c )
 {
    switch ( c )
    {
-      case '\"': return write_cstr_c_( rec, "\\\"" ); // double quotation mark
-      case '\\': return write_cstr_c_( rec, "\\\\" ); // backslash
-      case '\b': return write_cstr_c_( rec, "\\b" );  // backspace
-      case '\f': return write_cstr_c_( rec, "\\f" );  // formfeef
-      case '\n': return write_cstr_c_( rec, "\\n" );  // newline
-      case '\r': return write_cstr_c_( rec, "\\r" );  // carriage return
-      case '\t': return write_cstr_c_( rec, "\\t" );  // horzontal tab
-      case '\'': return write_cstr_c_( rec, "\\'" );  // 
-      default: return write_char_c_( rec, c );
+      case '\'': return write_cstr_c_( rec, "^'" );
+      case '^':  return write_cstr_c_( rec, "^^" );
+      default: return record_escaped_char( rec, c );
    }
 }
 
@@ -75,4 +69,15 @@ bool record_json_route_index_o( cRecorder rec[static 1], int64_t index )
    write_int64_c_( buf, index );
 
    return record_json_route_key_o( rec, recorded_chars_c( buf ) );
+}
+
+bool record_json_route_o( cRecorder rec[static 1], cCharsSlice route )
+{
+   for_each_c_( cChars const*, key, route )
+   {
+      if ( not record_json_route_key_o( rec, *key ) )
+         return false;
+   }
+
+   return true;
 }
