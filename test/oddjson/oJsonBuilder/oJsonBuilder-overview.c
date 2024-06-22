@@ -47,19 +47,19 @@ int main( void )
 
    cChars json = built_json_o( b );
    char const* exp = "> {\n"
-                     ">   \"name\":\"Full HD\",\n"
-                     ">   \"resolutions\":[\n"
+                     ">   \"name\": \"Full HD\",\n"
+                     ">   \"resolutions\": [\n"
                      ">     {\n"
-                     ">       \"width\":1280,\n"
-                     ">       \"height\":720\n"
+                     ">       \"width\": 1280,\n"
+                     ">       \"height\": 720\n"
                      ">     },\n"
                      ">     {\n"
-                     ">       \"width\":1920,\n"
-                     ">       \"height\":1080\n"
+                     ">       \"width\": 1920,\n"
+                     ">       \"height\": 1080\n"
                      ">     }\n"
                      ">   ],\n"
-                     ">   \"overscan\":true,\n"
-                     ">   \"missing\":null\n"
+                     ">   \"overscan\": true,\n"
+                     ">   \"missing\": null\n"
                      "> }";
       bool res = chars_is_c( json, exp );
       tap_desc_c_( res, "expected {s:q}, got {s:q}", exp, json.v );

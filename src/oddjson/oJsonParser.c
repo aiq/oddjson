@@ -65,7 +65,7 @@ bool push_json_parser_error_o( cErrorStack es[static 1],
    if ( p->err != NULL )
    {
       return push_lit_error_c( es, p->err ) ||
-             push_json_lit_error_o( es, "oJsonParser" );
+             push_json_lit_error( es, "oJsonParser" );
    }
 
    return false;

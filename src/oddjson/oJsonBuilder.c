@@ -236,12 +236,12 @@ bool push_json_builder_error_o( cErrorStack es[static 1], oJsonBuilder b[static 
    if ( b->_->rec->err != cNoError_ )
    {
       return push_recorder_error_c( es, b->_->rec ) ||
-             push_json_lit_error_o( es, "oJsonBuilder" );
+             push_json_lit_error( es, "oJsonBuilder" );
    }
    if ( b->_->err != cNoError_ )
    {
       return push_lit_error_c( es, b->_->err ) ||
-             push_json_lit_error_o( es, "oJsonBuilder" );
+             push_json_lit_error( es, "oJsonBuilder" );
    }
 
    return false;

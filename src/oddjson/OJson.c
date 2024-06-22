@@ -1,8 +1,11 @@
 #include "oddjson/OJson.h"
 
+#include "_/array_util.h"
+#include "_/error.h"
 #include "_/util.h"
 #include "oddjson/oJsonParser.h"
 #include "oddjson/oJsonRoute.h"
+#include "clingo/io/cTape.h"
 #include "clingo/io/jot.h"
 
 /*******************************************************************************
@@ -335,6 +338,164 @@ bool record_json_array_diff_o( cRecorder rec[static 1],
    cRecorder* route = &dyn_recorder_c_( 0 );
    bool res = intl_record_json_array_diff( rec, route, arr, oth );
    free_recorder_mem_c( route );
+   return res;
+}
+
+/*******************************************************************************
+
+*******************************************************************************/
+
+static inline OJson* get_value( OJson const* json,
+                                cChars key,
+                                cErrorStack es[static 1] )
+{
+   OJson* res = NULL;
+   if ( json->type == o_JsonObject )
+      res = get_via_chars_from_json_object_o( json->object, key );
+
+   if ( json->type == o_JsonArray )
+      res = get_via_chars_from_json_array_o( json->array, key, es );
+   
+   if ( res == NULL )
+   {
+      char const* typeStr = stringify_json_type_o( json->type );
+      push_text_error_c_( es, "not able to get {cs:q} from {s}", key, typeStr );
+   }
+   return res;
+}
+
+static inline OJson* goto_json( OJson* json,
+                                cCharsSlice route,
+                                int64_t* steps,
+                                cErrorStack es[static 1] )
+{
+   OJson* val = json;
+   times_c_( route.s, i )
+   {
+      *steps = i+1;
+      cChars key = route.v[i];
+      val = get_value( val, key, es );
+
+      if ( val == NULL )
+         break;
+   }
+
+   return val;
+}
+
+static bool route_tape_func( cRecorder rec[static 1],
+                             void const* i,
+                             char const fmt[static 1] )
+{
+   must_exist_c_( i );
+   cCharsSlice const* val = i;
+   return record_json_route_o( rec, *val );
+}
+static void* push_route_error( cErrorStack* es,
+                               cCharsSlice route,
+                               int64_t len,
+                               char const txt[static 1] )
+{
+   route = left_c_( cCharsSlice, route, len );
+   cTape routeTape = (cTape){ .i=&route, .f=route_tape_func };
+   push_text_error_c_( es, "{s} {t}", txt, routeTape );
+   push_json_error( es );
+   return NULL;
+}
+
+OJson* get_from_json_o( OJson const* json,
+                        cCharsSlice route,
+                        cErrorStack es[static 1] )
+{
+   must_exist_c_( json );
+
+   if ( is_empty_c_( route ) )
+      return false;
+
+   cCharsSlice childRoute = mid_c_( cCharsSlice, route, 1 );
+   cChars key = first_c_( route );
+   OJson* val = get_value( json, key, es );
+   if ( val == NULL )
+      return push_route_error( es, route, 1, "not able to get" );
+
+   int64_t steps = 0;
+   OJson* res = goto_json( val, childRoute, &steps, es );
+   if ( res == NULL )
+      return push_route_error( es, route, steps+1, "not able to get" );
+
+   return res;
+}
+
+bool remove_from_json_o( OJson* json,
+                         cCharsSlice route,
+                         cErrorStack es[static 1] )
+{
+   must_exist_c_( json );
+
+   if ( is_empty_c_( route ) )
+      return false;
+
+   cCharsSlice parentRoute = left_c_( cCharsSlice, route, route.s-1 );
+   cChars key = last_c_( route );
+   int64_t steps = 0;
+   OJson* parent = goto_json( json, parentRoute, &steps, es );
+   if ( parent == NULL )
+      return push_route_error( es, route, steps, "not able to get" );
+
+   bool res = false;
+   if ( parent->type == o_JsonObject )
+   {
+      res = remove_via_chars_from_json_object_o( parent->object, key );
+   }
+   else if ( parent->type == o_JsonArray )
+   {
+      res = remove_via_chars_from_json_array_o( parent->array,
+                                                key,
+                                                es );
+   }
+
+   if ( !res )
+   {
+      char const* typeStr = stringify_json_type_o( parent->type );
+      push_text_error_c_( es, "not able to remove {cs:q} from {s}", key, typeStr );
+      push_json_error( es );
+   }
+   return res;
+}
+
+bool set_on_json_o( OJson* json,
+                    cCharsSlice route,
+                    OJson* val,
+                    cErrorStack es[static 1] )
+{
+   must_exist_c_( json );
+
+   if ( is_empty_c_( route ) )
+      return false;
+
+   cCharsSlice parentRoute = left_c_( cCharsSlice, route, route.s-1 );
+   cChars key = last_c_( route );
+   int64_t steps = 0;
+   OJson* parent = goto_json( json, parentRoute, &steps, es );
+   if ( parent == NULL )
+      return push_route_error( es, route, steps, "not able to get" );
+
+   bool res = false;
+   if ( parent->type == o_JsonObject )
+   {
+      res = set_via_chars_on_json_object_o( parent->object, key, val );
+   }
+   else if ( parent->type == o_JsonArray )
+   {
+      res = set_via_chars_on_json_array_o( parent->array, key, val, es );
+   }
+
+   if ( !res )
+   {
+      char const* typeStr = stringify_json_type_o( parent->type );
+      push_text_error_c_( es, "not able to set {cs:q} on {s}", key, typeStr );
+      push_json_error( es );
+   }
    return res;
 }
 

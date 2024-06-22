@@ -3,7 +3,7 @@
 
 #include "clingo/container/vec.h"
 #include "clingo/io/cScanner.h"
-#include "clingo/string/CStringList.h"
+#include "clingo/type/cCharsSlice.h"
 #include "oddjson/apidecl.h"
 #include "oddjson/OJsonArray.h"
 #include "oddjson/OJsonObject.h"
@@ -116,14 +116,14 @@ CLINGO_API inline OJson* set_json_number_o( OJson json[static 1], double number 
 CLINGO_API inline OJson* set_json_object_o( OJson json[static 1], OJsonObject* obj )
 {
    json->type = o_JsonObject;
-   json->object = obj;
+   json->object = retain_c( obj );
    return json;
 }
 
 CLINGO_API inline OJson* set_json_array_o( OJson json[static 1], OJsonArray* arr )
 {
    json->type = o_JsonArray;
-   json->array = arr;
+   json->array = retain_c( arr );
    return json;
 }
 
@@ -156,6 +156,23 @@ ODDJSON_API bool record_json_object_diff_o( cRecorder rec[static 1],
 ODDJSON_API bool record_json_array_diff_o( cRecorder rec[static 1],
                                            OJsonArray const* arr,
                                            OJsonArray const* oth );
+
+/*******************************************************************************
+
+*******************************************************************************/
+
+ODDJSON_API OJson* get_from_json_o( OJson const* json,
+                                    cCharsSlice route,
+                                    cErrorStack es[static 1] );
+
+ODDJSON_API bool remove_from_json_o( OJson* json,
+                                     cCharsSlice route,
+                                     cErrorStack es[static 1] );
+
+ODDJSON_API bool set_on_json_o( OJson* json,
+                                cCharsSlice route,
+                                OJson* val,
+                                cErrorStack es[static 1] );
 
 /*******************************************************************************
 
