@@ -28,20 +28,20 @@ int main( void )
       )
    );
 
-   for_each_c_( test const*, t, tests )
+   for_each_c_( i, test const*, t, tests )
    {
       cScanner* sca = &cstr_scanner_c_( t->json );
       oJsonString jstr;
-      expect_c_( scan_json_string_o( sca, &jstr ) );
+      expect_c_( i, scan_json_string_o( sca, &jstr ) );
 
       cChars exp = c_c( t->exp );
-      expect_c_( json_string_is_o( &jstr, exp ) );
-      expect_c_( jstr.byteLength == exp.s );
-      expect_c_( jstr.length == count_runes_c( exp ) );
+      expect_c_( i, json_string_is_o( &jstr, exp ) );
+      expect_c_( i, jstr.byteLength == exp.s );
+      expect_c_( i, jstr.length == count_runes_c( exp ) );
 
       cVarChars buf = var_chars_c_( 128 );
       cChars decoded = decode_json_string_chars_o( &jstr, buf );
-      expect_c_( eq_chars_c( exp, decoded ) );
+      expect_c_( i, eq_chars_c( exp, decoded ) );
    }
 
    return finish_tap_c_();

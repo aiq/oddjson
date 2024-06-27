@@ -587,7 +587,7 @@ static inline bool add_json_object_entries( oJsonBuilder b[static 1],
    tmpVarStrings keys;
    if ( not sorted_keys( obj, &keys ) ) return false;
 
-   for_each_c_( CString const**, key, keys )
+   each_c_( CString const**, key, keys )
    {
       OJson const* val = get_from_json_object_o( obj, *key );
       if ( not add_json_o( b, sc_c( *key ), val ) )

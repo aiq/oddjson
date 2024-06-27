@@ -28,7 +28,7 @@ int main( void )
       add_json_string_o_( b, "name", c_c( "Full HD" ) );
 
       begin_json_array_o_( b, "resolutions" );
-      for_each_c_( resolution const*, res, resolutions )
+      each_c_( resolution const*, res, resolutions )
       {
          begin_json_object_value_o( b );
          {

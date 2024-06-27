@@ -55,7 +55,7 @@ int main( void )
       add_json_value_o( b , json );
       cChars built = built_json_o( b );
       bool res = chars_is_c( built, t.exp );
-      expect_c_( res );
+      expect_c_( i, res );
 
       cleanup_json_builder_o( b );
       release_all_c_( json, val );

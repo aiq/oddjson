@@ -73,7 +73,7 @@ bool record_json_route_index_o( cRecorder rec[static 1], int64_t index )
 
 bool record_json_route_o( cRecorder rec[static 1], cCharsSlice route )
 {
-   for_each_c_( cChars const*, key, route )
+   each_c_( cChars const*, key, route )
    {
       if ( not record_json_route_key_o( rec, *key ) )
          return false;

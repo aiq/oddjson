@@ -22,18 +22,22 @@ int main( void )
       t_( "", "  ", "enabled", false, "{\n  \"enabled\": false\n}" )
    );
 
-   for_each_c_( test const*, t, tests )
+   for_each_c_( i, test const*, t, tests )
    {
       oJsonBuilder* b = &json_builder_o_( t->prefix, t->indent );
       init_json_builder_o( b, 1024 );
 
-      expect_c_( begin_json_object_value_o( b ) );
-      expect_c_( add_json_bool_o_( b, t->name, t->value ) );
-      expect_c_( finish_json_object_o( b ) );
+      expect_c_( i, begin_json_object_value_o( b ) );
+      expect_c_( i, add_json_bool_o_( b, t->name, t->value ) );
+      expect_c_( i, finish_json_object_o( b ) );
 
       cChars json = built_json_o( b );
       bool res = chars_is_c( json, t->exp );
-      tap_desc_c_( res, "expected {s:q}, got {s:q}", t->exp, json.v );
+      expect_block_c_( i, res )
+      {
+         tap_exp_line_c_( "{s}", t->exp );
+         tap_got_line_c_( "{cs}", json );
+      }
 
       cleanup_json_builder_o( b );
 

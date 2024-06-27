@@ -20,28 +20,24 @@ int main( void )
       t_( cs_c_( "store", "bookRelease", "0", "author"), c_c( "\"store'bookRelease'0'author\"" ) )
    );
 
-   for_each_c_( test const*, t, tests )
+   for_each_c_( i, test const*, t, tests )
    {
       cRecorder* rec = &dyn_recorder_c_( 0 );
 
-      for_each_c_( cChars const*, key, t->keys )
+      each_c_( cChars const*, key, t->keys )
       {
          record_json_route_key_o( rec, *key );
       }
 
       cChars route = recorded_chars_c( rec );
       bool res = eq_chars_c( route, t->exp );
-      tap_desc_c_( res, "expected {s} / got {s}", t->exp.v, route.v );
+      expect_block_c_( i, res )
+      {
+         tap_exp_line_c_( "{s}", t->exp.v );
+         tap_got_line_c_( "{cs}", route );
+      }
 
       free_recorder_mem_c( rec );
-   }
-   cRecorder* rec = &dyn_recorder_c_( 0 );
-
-   cCharsSlice keys = cs_c_( "a", "b", "c" );
-
-   for_each_c_( cChars const*, key, keys )
-   {
-      record_json_route_key_o( rec, *key );
    }
 
    return finish_tap_c_();

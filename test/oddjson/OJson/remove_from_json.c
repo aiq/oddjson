@@ -39,7 +39,7 @@ int main( void )
       OJson* json = let_json_o_();
       require_c_( unmarshal_json_o( sca, json, es ) );
 
-      expect_c_( remove_from_json_o( json, t.route, es ) );
+      expect_c_( i, remove_from_json_o( json, t.route, es ) );
 
       oJsonBuilder* b = &json_builder_o_( "", "" );
       require_c_( init_json_builder_o( b, 1024 ) );
@@ -48,7 +48,7 @@ int main( void )
       cChars built = built_json_o( b );
       println_c_( "{cs}", built );
       bool res = chars_is_c( built, t.exp );
-      expect_c_( res );
+      expect_c_( i, res );
 
       cleanup_json_builder_o( b );
       release_all_c_( json );

@@ -128,7 +128,7 @@ int main( void )
    }
    finish_parse_json_object_o( p );
 
-   expect_c_( string_is_c( it->name, "Full HD" ) );
+   expect_at_c_( string_is_c( it->name, "Full HD" ) );
 
    release_c( it );
    return finish_tap_c_();

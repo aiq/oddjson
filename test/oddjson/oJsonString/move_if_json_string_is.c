@@ -28,11 +28,11 @@ int main( void )
       )
    );
 
-   for_each_c_( test const*, t, tests )
+   for_each_c_( i, test const*, t, tests )
    {
       cScanner* sca = &cstr_scanner_c_( t->json );
-      expect_c_( move_if_json_string_is_o_( sca, t->exp ) );
-      expect_c_( unscanned_is_c( sca, t->tail ) );
+      expect_c_( i, move_if_json_string_is_o_( sca, t->exp ) );
+      expect_c_( i, unscanned_is_c( sca, t->tail ) );
    }
 
    return finish_tap_c_();

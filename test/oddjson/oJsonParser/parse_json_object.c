@@ -58,7 +58,7 @@ int main( void )
       )
    );
 
-   for_each_c_( test const*, t, tests )
+   for_each_c_( i, test const*, t, tests )
    {
       oJsonParser* p = &(oJsonParser){};
       init_json_parser_o( p, c_c( t->inp ) );
@@ -71,7 +71,7 @@ int main( void )
       init_json_builder_shell_o( b, rec );
       add_json_object_value_o( b, obj );
 
-      expect_c_( recorded_is_c( rec, t->exp ) );
+      expect_c_( i, recorded_is_c( rec, t->exp ) );
 
       release_all_c_( obj );
       cleanup_json_builder_o( b );
