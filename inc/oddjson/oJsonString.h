@@ -1,9 +1,7 @@
 #ifndef ODDJSON_UTIL_H
 #define ODDJSON_UTIL_H
 
-#include "clingo/io/cRecorder.h"
-#include "clingo/io/cScanner.h"
-#include "clingo/string/CString.h"
+#include "clingo/clingo.h"
 #include "oddjson/apidecl.h"
 
 /*******************************************************************************

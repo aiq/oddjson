@@ -1,7 +1,7 @@
 #ifndef ODDJSON_OJSON_PARSER_H
 #define ODDJSON_OJSON_PARSER_H
 
-#include "clingo/io/cScanner.h"
+#include "clingo/clingo.h"
 #include "oddjson/apidecl.h"
 #include "oddjson/error.h"
 #include "oddjson/oJsonString.h"

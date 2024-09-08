@@ -1,7 +1,4 @@
-#include "clingo/container/vec.h"
-#include "clingo/lang/expect.h"
-#include "oddjson/oJsonParser.h"
-#include "clingo/io/print.h"
+#include "oddjson/oddjson.h"
 
 /*******************************************************************************
  types

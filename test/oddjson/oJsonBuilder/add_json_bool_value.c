@@ -1,5 +1,4 @@
-#include "clingo/lang/expect.h"
-#include "oddjson/oJsonBuilder.h"
+#include "oddjson/oddjson.h"
 
 TEMP_SLICE_C_(
    test,

@@ -1,5 +1,4 @@
-#include "clingo/lang/expect.h"
-#include "oddjson/oJsonRoute.h"
+#include "oddjson/oddjson.h"
 
 #define expect_( Rec, Cstr )                                                   \
 (                                                                              \

@@ -1,8 +1,7 @@
 #ifndef ODDJSON_OJSONROUTE_H
 #define ODDJSON_OJSONROUTE_H
 
-#include "clingo/io/cRecorder.h"
-#include "clingo/io/cScanner.h"
+#include "clingo/clingo.h"
 #include "oddjson/apidecl.h"
 
 /*******************************************************************************

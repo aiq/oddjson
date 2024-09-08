@@ -1,7 +1,7 @@
 #ifndef ODDJSON_OJSONARRAY_H
 #define ODDJSON_OJSONARRAY_H
 
-#include "clingo/container/vec.h"
+#include "clingo/clingo.h"
 #include "oddjson/apidecl.h"
 #include "oddjson/OJsonObject.h"
 

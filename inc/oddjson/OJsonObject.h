@@ -1,9 +1,7 @@
 #ifndef ODDJSON_OJSONOBJECT_H
 #define ODDJSON_OJSONOBJECT_H
 
-#include "clingo/container/map.h"
-#include "clingo/io/cScanner.h"
-#include "clingo/string/CString.h"
+#include "clingo/clingo.h"
 #include "oddjson/apidecl.h"
 
 /*******************************************************************************

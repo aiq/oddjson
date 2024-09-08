@@ -58,7 +58,7 @@ if( WIN32 )
 else()
     set( TEST_LINK_LIBS ${LIB_NAME} m clingo )
 endif()
-add_tests( "${TEST_FILES}" "${TEST_INC_DIRS}" "${TEST_LINK_LIBS}" )
+add_tests( "${PROJECT_NAME}" "${TEST_FILES}" "${TEST_INC_DIRS}" "${TEST_LINK_LIBS}" )
 
 set( APP_INC_DIRS ${INC_DIR} ${SRC_DIR} ${APP_DIR} )
 if( WIN32 )

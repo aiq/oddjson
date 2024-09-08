@@ -1,7 +1,7 @@
 #ifndef ODDJSON_OJSONBUILDER_H
 #define ODDJSON_OJSONBUILDER_H
 
-#include "clingo/lang/CObject.h"
+#include "clingo/clingo.h"
 #include "oddjson/apidecl.h"
 #include "oddjson/error.h"
 #include "oddjson/OJson.h"

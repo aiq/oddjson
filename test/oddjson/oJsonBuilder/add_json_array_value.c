@@ -1,6 +1,4 @@
-#include "clingo/io/print.h"
-#include "clingo/lang/expect.h"
-#include "oddjson/oJsonBuilder.h"
+#include "oddjson/oddjson.h"
 
 int main( void )
 {
