@@ -1,7 +1,7 @@
 #ifndef ODDJSON_INTERN_ERROR_H
 #define ODDJSON_INTERN_ERROR_H
 
-#include "oddjson//error.h"
+#include "oddjson/error.h"
 
 /*******************************************************************************
 ********************************************************************* Functions

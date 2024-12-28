@@ -1,6 +1,7 @@
 #ifndef ODDJSON_ODDJSON_H
 #define ODDJSON_ODDJSON_H
 
+#include "oddjson/error.h"
 #include "oddjson/OJson.h"
 #include "oddjson/OJsonArray.h"
 #include "oddjson/oJsonBuilder.h"
